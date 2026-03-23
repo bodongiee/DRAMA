@@ -31,7 +31,7 @@
    <joint type="fixed" name="floating_base">
       <parent link="world"/>
       <child link="floating_base_jointbody"/>
-      <origin xyz="0.0 0.0 0.15" rpy="0.0 0.0 0.0"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
    </joint>
    <joint type="fixed" name="floating_base_offset">
       <parent link="floating_base_jointbody"/>
