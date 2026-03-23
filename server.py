@@ -7,6 +7,7 @@ app = FastAPI()
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/robot", StaticFiles(directory="robot"), name="robot")
 
 @app.get("/")
 async def get():
