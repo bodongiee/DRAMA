@@ -4,16 +4,17 @@
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
   import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
   import URDFLoader from 'urdf-loader'
-  import { setRobot, initWebSocket, robotJointDefs, showGround, showGrid, autoRotate, activeTab, manualMode, joints, setJointAngle } from '../stores/robot.js'
+  import { setRobot, initWebSocket, robotJointDefs, robotScene, showGround, showGrid, autoRotate, activeTab, manualMode, joints, setJointAngle, showHPlane, hPlaneHeight, hPlaneOpacity } from '../stores/robot.js'
   let container
   let statusText = 'Loading URDF & OBJ...'
   let loaded = false
-  let sceneObj, groundObj, gridObj, axesObj, controlsObj
+  let sceneObj, groundObj, gridObj, axesObj, controlsObj, hPlaneObj
 
   onMount(() => {
     // ── Scene ──────────────────────────────────────────────
     const scene = new THREE.Scene()
     sceneObj = scene
+    robotScene.set(scene)
 
     // ── Renderer ───────────────────────────────────────────
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
@@ -96,6 +97,22 @@
 
     gridObj = gridGroup
     scene.add(gridGroup)
+
+    // ── Horizontal Plane ───────────────────────────────────
+    const hPlane = new THREE.Mesh(
+      new THREE.PlaneGeometry(40, 40),
+      new THREE.MeshBasicMaterial({
+        color: 0x4fa3f7,
+        transparent: true,
+        opacity: 0.15,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      })
+    )
+    hPlane.rotation.x = -Math.PI / 2
+    hPlane.visible = false
+    hPlaneObj = hPlane
+    scene.add(hPlane)
 
     const axes = new THREE.AxesHelper(0.4)
     axesObj = axes
@@ -275,6 +292,13 @@
     controlsObj.autoRotate = $autoRotate
     controlsObj.autoRotateSpeed = -2.0 // 회전 속도 (필요시 조절)
   }
+
+  // Horizontal Plane 표시/위치/불투명도 업데이트
+  $: if (hPlaneObj) {
+    hPlaneObj.visible = $showHPlane
+    hPlaneObj.position.y = $hPlaneHeight
+    hPlaneObj.material.opacity = $hPlaneOpacity
+  }
 </script>
 
 <div class="viewer-container" bind:this={container}></div>
@@ -284,7 +308,7 @@
 </div>
 
 <div class="hint-badge">
-  드래그: 회전 &nbsp;·&nbsp; 스크롤: 줌 &nbsp;·&nbsp; 우클릭: 이동
+  Drag: Rotation &nbsp;·&nbsp; Scroll: Zoom &nbsp;·&nbsp; Right: Move
 </div>
 
 <style>

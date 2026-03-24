@@ -9,7 +9,7 @@
       <tr><th>Joint</th><th>Type</th><th>Min / Max</th></tr>
     </thead>
     <tbody>
-      {#each $robotJointDefs as joint}
+      {#each [...$robotJointDefs].sort((a, b) => a.name.localeCompare(b.name)) as joint}
         <tr>
           <td class="name">{joint.name}</td>
           <td class="type">{joint.type}</td>

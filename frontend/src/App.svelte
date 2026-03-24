@@ -1,10 +1,12 @@
 <script>
   import RobotViewer from './components/RobotViewer.svelte'
   import JointTable from './components/JointTable.svelte'
-  import JointInfoTable from './components/JointInfoTable.svelte'
+  import HandViewer from './components/HandViewer.svelte'
   import TrajectoryPanel from './components/TrajectoryPanel.svelte'
   import ControlJoints from './components/ControlJoints.svelte'
-  import { showGround, showGrid, showJointInfo, autoRotate, activeTab, joints, robotJointDefs } from './stores/robot.js'
+  import { showGround, showGrid, showJointInfo, autoRotate, activeTab, joints, robotJointDefs, showHPlane, hPlaneHeight, hPlaneOpacity } from './stores/robot.js'
+
+  let showHandViewer = false
 
   $: allJoints = $robotJointDefs.map(j => [j.name, $joints[j.name] || 0])
   $: baseJoints = allJoints.filter(([k]) => !k.startsWith('arm_l_') && !k.startsWith('arm_r_') && !k.startsWith('finger_l_') && !k.startsWith('finger_r_'))
@@ -110,46 +112,63 @@
       <input type="checkbox" bind:checked={$showJointInfo} />
       Joint Info
     </label>
-    <div class="horizontal-toggles">
-      <label class="text-toggle">
-        <input type="checkbox" bind:checked={$showGround} />
-        Ground
-      </label>
-      <label class="text-toggle">
-        <input type="checkbox" bind:checked={$showGrid} />
-        Grid
-      </label>
-    </div>
+    <label class="text-toggle">
+      <input type="checkbox" bind:checked={showHandViewer} />
+      Hand View
+    </label>
     <label class="text-toggle">
       <input type="checkbox" bind:checked={$autoRotate} />
       Rotate View
     </label>
+    <div class="horizontal-toggles">
+      <label class="text-toggle">
+        <input type="checkbox" bind:checked={$showGrid} />
+        Grid
+      </label>
+      <label class="text-toggle">
+        <input type="checkbox" bind:checked={$showGround} />
+        Ground
+      </label>
+    </div>
+    <div class="hplane-row">
+      <label class="text-toggle">
+        <input type="checkbox" bind:checked={$showHPlane} />
+        H-Plane
+      </label>
+      {#if $showHPlane}
+        <input
+          class="hplane-input"
+          type="number"
+          step="0.01"
+          bind:value={$hPlaneHeight}
+        />
+        <span class="hplane-unit">m</span>
+        <input
+          class="hplane-input"
+          type="number"
+          min="0" max="1" step="0.01"
+          bind:value={$hPlaneOpacity}
+        />
+        <span class="hplane-unit">opacity</span>
+      {/if}
+    </div>
   </div>
+
+  <!-- Hand Viewer Panel -->
+  {#if showHandViewer}
+    <div class="hand-panel">
+      <HandViewer side="left" />
+      <div class="hand-divider"></div>
+      <HandViewer side="right" />
+    </div>
+  {/if}
 
   <!-- Right-aligned Content Panel -->
   <div class="right-panel">
     <!-- Content -->
     <div class="tab-body">
       {#if $activeTab === 'sync'}
-        <div class="pose-categories">
-          <div class="category-section">
-            <h4>ARM - Left</h4>
-            <JointTable />
-          </div>
-          <div class="category-section">
-            <h4>ARM - Right</h4>
-            <JointTable />
-          </div>
-          <div class="category-section">
-            <h4>Hand - Left</h4>
-            <JointTable />
-          </div>
-          <div class="category-section">
-            <h4>Hand - Right</h4>
-            <JointTable />
-          </div>
-        </div>
-        <JointInfoTable />
+        <JointTable />
       {:else if $activeTab === 'traj'}
         <TrajectoryPanel />
       {:else if $activeTab === 'control'}
@@ -261,6 +280,39 @@
   .horizontal-toggles {
     display: flex;
     gap: 20px;
+  }
+
+  .hplane-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hplane-input {
+    width: 60px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    color: var(--primary-color);
+    font-size: 0.82em;
+    font-family: 'Courier New', monospace;
+    padding: 2px 6px;
+    text-align: right;
+    outline: none;
+    -moz-appearance: textfield;
+  }
+
+  .hplane-input::-webkit-outer-spin-button,
+  .hplane-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .hplane-unit {
+    font-size: 0.75em;
+    color: #555;
+    letter-spacing: 0.5px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
   }
 
   .text-toggle {
@@ -387,6 +439,32 @@
     padding: 10px 12px;
     overflow-y: auto;
     overflow-x: hidden;
+  }
+
+  /* ── Hand Viewer Panel ── */
+  .hand-panel {
+    position: absolute;
+    margin-left: 50px;
+    top: 20px;
+    left: 230px;
+    width: 450px;
+    height: calc(100vh - 40px);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    background: rgba(18, 18, 22, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  }
+
+  .hand-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
   }
 
   /* ── Mobile ── */

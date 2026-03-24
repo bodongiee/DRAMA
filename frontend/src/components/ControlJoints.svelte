@@ -38,11 +38,11 @@
   }
 
   $: categories = [
-    { name: 'BASE', joints: $robotJointDefs.filter(j => !j.name.startsWith('arm_l_') && !j.name.startsWith('arm_r_') && !j.name.startsWith('finger_l_') && !j.name.startsWith('finger_r_')) },
-    { name: 'ARM - Left', joints: $robotJointDefs.filter(j => j.name.startsWith('arm_l_')) },
-    { name: 'ARM - Right', joints: $robotJointDefs.filter(j => j.name.startsWith('arm_r_')) },
-    { name: 'Hand - Left', joints: $robotJointDefs.filter(j => j.name.startsWith('finger_l_')) },
-    { name: 'Hand - Right', joints: $robotJointDefs.filter(j => j.name.startsWith('finger_r_')) }
+    { name: 'BASE', joints: $robotJointDefs.filter(j => !j.name.startsWith('arm_l_') && !j.name.startsWith('arm_r_') && !j.name.startsWith('finger_l_') && !j.name.startsWith('finger_r_')).sort((a, b) => a.name.localeCompare(b.name)) },
+    { name: 'ARM - Left', joints: $robotJointDefs.filter(j => j.name.startsWith('arm_l_')).sort((a, b) => a.name.localeCompare(b.name)) },
+    { name: 'ARM - Right', joints: $robotJointDefs.filter(j => j.name.startsWith('arm_r_')).sort((a, b) => a.name.localeCompare(b.name)) },
+    { name: 'Hand - Left', joints: $robotJointDefs.filter(j => j.name.startsWith('finger_l_')).sort((a, b) => a.name.localeCompare(b.name)) },
+    { name: 'Hand - Right', joints: $robotJointDefs.filter(j => j.name.startsWith('finger_r_')).sort((a, b) => a.name.localeCompare(b.name)) }
   ].filter(c => c.joints.length > 0);
 
   let expandedCategories = {}

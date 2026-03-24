@@ -1,7 +1,11 @@
-# DRAMA (Dashboard for Robotic Arm & Manipulator Admin)
-The frontend is built with Svelte (Vite), and the backend uses Python FastAPI.
+# DRAMA 
+**D**ashboard for **R**obotic **A**rm & **M**anipulator **A**dmin
 
----
+<img width="100%" src="./img/intro.png"></img>
+
+
+
+
 
 ## How to run for Development (Development Mode)
 
@@ -26,9 +30,9 @@ npm run dev
 
 ---
 
-## How to Run after Build (Production Mode)
+## How to Run after Build
 
-This method optimizes (minifies) the code after development is complete and serves it through a single Python server.
+This method optimizes the code after development is complete and serves it through a single Python server.
 
 ```bash
 # 1. Navigate to the frontend folder and create a production build (creates the frontend/dist folder)
@@ -41,3 +45,16 @@ python server.py
 ```
 
 Open your browser and navigate to **`http://localhost:1111`** to use the final built web page.
+
+
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | [Svelte](https://svelte.dev/) + [Vite](https://vitejs.dev/) |
+| **Backend** | [Python](https://www.python.org/) + [FastAPI](https://fastapi.tiangolo.com/) |
+| **Communication** | WebSocket |
+| **3D Rendering** | Three.js (URDF Loader) |
