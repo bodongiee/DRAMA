@@ -3,6 +3,7 @@
   import JointTable from './components/JointTable.svelte'
   import HandViewer from './components/HandViewer.svelte'
   import TrajectoryPanel from './components/TrajectoryPanel.svelte'
+  import LoadTrajectory from './components/LoadTrajectory.svelte'
   import ControlJoints from './components/ControlJoints.svelte'
   import { showGround, showGrid, showJointInfo, autoRotate, activeTab, joints, robotJointDefs, showHPlane, hPlaneHeight, hPlaneOpacity } from './stores/robot.js'
 
@@ -40,6 +41,10 @@
         <button class="tab" class:active={$activeTab === 'traj'}
                 on:click={() => $activeTab = 'traj'}>
           See Trajectory
+        </button>
+        <button class="tab" class:active={$activeTab === 'load'}
+                on:click={() => $activeTab = 'load'}>
+          Load Trajectory
         </button>
         <button class="tab" class:active={$activeTab === 'control'}
                 on:click={() => $activeTab = 'control'}>
@@ -171,6 +176,8 @@
         <JointTable />
       {:else if $activeTab === 'traj'}
         <TrajectoryPanel />
+      {:else if $activeTab === 'load'}
+        <LoadTrajectory />
       {:else if $activeTab === 'control'}
         <ControlJoints />
       {/if}

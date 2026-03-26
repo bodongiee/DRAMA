@@ -49,6 +49,10 @@ API specification for sending robot data to the DRAMA dashboard.
                 f5_1, f5_2, f5_3, f5_4],
         "controller": [x, y, z, qw, qx, qy, qz],
         "eef":        [x, y, z, qw, qx, qy, qz]
+    },
+    "activated": {
+        "left":  true,
+        "right": false
     }
 }
 ```
@@ -110,6 +114,20 @@ Array order follows **natural sort** order of joint names.
 
 ---
 
+### `activated` — Controller activation state
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `left`  | boolean | Whether the left controller is activated |
+| `right` | boolean | Whether the right controller is activated |
+
+- `true`: activated — trajectory is displayed in its original color
+- `false`: deactivated — trajectory is displayed in white
+
+> `activated` is optional. If omitted, the activation state remains unchanged from the previous message.
+
+---
+
 ## Example Message
 
 ```json
@@ -137,6 +155,10 @@ Array order follows **natural sort** order of joint names.
         ],
         "controller": [-0.3, 1.2, 0.1, 1.0, 0.0, 0.0, 0.0],
         "eef":        [-0.25, 1.1, 0.05, 0.707, 0.0, -0.707, 0.0]
+    },
+    "activated": {
+        "left":  true,
+        "right": false
     }
 }
 ```
@@ -148,6 +170,7 @@ Array order follows **natural sort** order of joint names.
 - **Manual Mode enabled**: incoming data is ignored; dashboard slider values are preserved.
 - **Partial messages allowed**: any subset of `arm`, `hand`, `controller`, `eef` may be omitted. Missing fields are not updated.
 - **Independent sides**: `left` or `right` may be omitted independently.
+- **`activated` is optional**: if omitted, the activation state from the previous message is preserved.
 
 ---
 
